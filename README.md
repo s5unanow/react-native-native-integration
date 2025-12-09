@@ -14,8 +14,8 @@ Checkout each branch to follow along:
 | `step-3-android` | Android native implementation |
 | `step-4-usage` | Basic usage example |
 | `step-5-events` | Progress & completion events |
-| **`step-6-commands`** | **Native commands (play/pause/seek)** |
-| `main` | Complete working example |
+| `step-6-commands` | Native commands (play/pause/seek) |
+| **`main`** | **Complete working example** |
 
 ## Running
 
@@ -26,30 +26,42 @@ npm run ios
 npm run android
 ```
 
-## This Step
+## Key Concepts
 
-Add imperative native commands: `play()`, `pause()`, and `seekTo(time)`.
+- **Fabric Native Components**: Modern React Native architecture for native views
+- **Codegen & TypeScript specs**: Type-safe native interface generation
+- **DirectEventHandler**: For events from native to JS
+- **codegenNativeCommands**: For imperative API (play/pause/seek)
+- **iOS**: RCTViewComponentView with Swift AVPlayer
+- **Android**: SimpleViewManager with Fabric delegate and ExoPlayer
 
-### What was added
+## Project Structure
 
-- **`src/specs/RTNVideoPlayerCommands.ts`** — Commands spec
-  - Uses `codegenNativeCommands` to define `play`, `pause`, `seekTo`
-  - `seekTo` takes a `Double` parameter (seconds)
-- **`src/components/VideoPlayer.tsx`** — Exposed commands via ref
-  - Converted to `forwardRef` with `useImperativeHandle`
-  - Exports `VideoPlayerRef` interface: `play()`, `pause()`, `seekTo(time)`
-  - Internally calls `Commands.play(nativeRef)` etc.
-- **`RTNVideoPlayerViewSwift.swift`** (iOS) — Added `play()`, `pause()`, `seekTo(_:)` methods
-- **`RTNVideoPlayerView.mm`** (iOS) — Implemented `handleCommand:args:` to dispatch commands
-- **`RTNVideoPlayerView.kt`** (Android) — Added `play()`, `commandPause()`, `seekTo()` methods
-- **`RTNVideoPlayerManager.kt`** (Android) — Overrode command methods from the generated interface
-- **`App.tsx`** — Added play/pause button, seek controls (-10s / +10s), restart on end
+```
+src/
+├── specs/
+│   ├── RTNVideoPlayerNativeComponent.ts  # Component spec with props & events
+│   └── RTNVideoPlayerCommands.ts          # Native commands spec
+└── components/
+    └── VideoPlayer.tsx                    # React wrapper component
 
-### Key Concepts
+ios/RTNVideoPlayer/
+├── RTNVideoPlayerManager.mm               # Legacy bridge (backward compat)
+├── RTNVideoPlayerView.h                   # Fabric component header
+├── RTNVideoPlayerView.mm                  # Fabric component implementation
+└── RTNVideoPlayerViewSwift.swift          # Swift AVPlayer implementation
 
-- **`codegenNativeCommands`** generates type-safe command dispatchers for both platforms
-- Commands are the JS → native imperative API (opposite direction from events)
-- On JS side: `Commands.play(nativeRef)` sends the command to native
-- Consumer uses `useRef<VideoPlayerRef>` + `ref.current.play()` for a clean API
-- iOS receives commands via `handleCommand:args:` on the `RCTViewComponentView`
-- Android receives commands via the `ManagerInterface` override methods
+android/app/src/main/java/.../videoplayer/
+├── RTNVideoPlayerManager.kt               # ViewManager with Fabric delegate
+├── RTNVideoPlayerPackage.kt               # Package registration
+└── RTNVideoPlayerView.kt                  # ExoPlayer implementation
+```
+
+## Features
+
+- Video playback from URL
+- Pause/resume support
+- Progress events (currentTime, duration, progress)
+- Video end event
+- Native commands: play(), pause(), seekTo(time)
+- Full TypeScript type safety
