@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
 import RTNVideoPlayer from '../specs/RTNVideoPlayerNativeComponent';
 
 interface VideoPlayerProps {
   sourceUrl: string;
   paused?: boolean;
-  style?: object;
+  style?: StyleProp<ViewStyle>;
 }
 
 export const VideoPlayer: React.FC<VideoPlayerProps> = ({
