@@ -1,5 +1,6 @@
 package com.reactnativenativeintegration.videoplayer
 
+import com.facebook.react.common.MapBuilder
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
@@ -30,6 +31,13 @@ class RTNVideoPlayerManager : SimpleViewManager<RTNVideoPlayerView>(),
     @ReactProp(name = "paused")
     override fun setPaused(view: RTNVideoPlayerView, paused: Boolean) {
         view.setPaused(paused)
+    }
+
+    override fun getExportedCustomDirectEventTypeConstants(): Map<String, Any>? {
+        return MapBuilder.builder<String, Any>()
+            .put("topVideoProgress", MapBuilder.of("registrationName", "onVideoProgress"))
+            .put("topVideoEnd", MapBuilder.of("registrationName", "onVideoEnd"))
+            .build()
     }
 
     companion object {

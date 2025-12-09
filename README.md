@@ -12,8 +12,8 @@ Checkout each branch to follow along:
 | `step-1-js-spec` | TypeScript component spec |
 | `step-2-ios` | iOS native implementation |
 | `step-3-android` | Android native implementation |
-| **`step-4-usage`** | **Basic usage example** |
-| `step-5-events` | Progress & completion events |
+| `step-4-usage` | Basic usage example |
+| **`step-5-events`** | **Progress & completion events** |
 | `step-6-commands` | Native commands (play/pause/seek) |
 | `main` | Complete working example |
 
@@ -28,21 +28,30 @@ npm run android
 
 ## This Step
 
-Wire the native component into the React app and play a video.
+Add native-to-JS events: video progress reporting and video end notification.
 
 ### What was changed
 
-- **`App.tsx`** — Replaced boilerplate with `VideoPlayer` usage
-  - Renders `<VideoPlayer sourceUrl={SAMPLE_VIDEO} />` with a sample MP4
-  - Simple layout: header, player (16:9), info text
-- **`ios/Info.plist`** — Enabled `NSAllowsArbitraryLoads` for HTTP video URLs
-
-### What you should see
-
-A working video player rendering Big Buck Bunny from a remote URL. The video plays automatically on both iOS and Android.
+- **`src/specs/RTNVideoPlayerNativeComponent.ts`** — Added event types to the Codegen spec
+  - `onVideoProgress`: `DirectEventHandler` with `currentTime`, `duration`, `progress` (all `Double`)
+  - `onVideoEnd`: `DirectEventHandler` with empty payload
+- **`src/components/VideoPlayer.tsx`** — Added `onProgress` and `onEnd` callback props
+  - Maps `onVideoProgress` native event → `onProgress` with unwrapped `nativeEvent`
+- **`RTNVideoPlayerViewSwift.swift`** (iOS) — Added progress timer and end observer
+  - 500ms `Timer` emits progress data while playing
+  - `NotificationCenter` observer for `AVPlayerItemDidPlayToEndTime`
+  - Proper cleanup in `deinit` and when re-setting source
+- **`RTNVideoPlayerView.kt`** (Android) — Added progress handler and end listener
+  - `Handler`/`Runnable` pattern emits progress every 500ms
+  - `Player.Listener.onPlaybackStateChanged` detects `STATE_ENDED`
+  - Custom `Event` subclasses: `VideoProgressEvent`, `VideoEndEvent`
+- **`RTNVideoPlayerManager.kt`** (Android) — Registered event type constants
+- **`RTNVideoPlayerView.mm`** (iOS) — Wired Swift callbacks to Fabric `EventEmitter`
+- **`App.tsx`** — Added progress bar and time display
 
 ### Key Concepts
 
-- The `VideoPlayer` wrapper component hides the native `RTNVideoPlayer` from app code
-- Props flow: `sourceUrl` (JS) → Codegen → native view → AVPlayer / ExoPlayer
-- This is the first end-to-end test: JS spec + iOS native + Android native all connected
+- **`DirectEventHandler<T>`** in the Codegen spec generates event infrastructure on both platforms
+- iOS: Events flow through the Fabric `EventEmitter` (C++ → JS)
+- Android: Events use `Event` subclasses dispatched via `UIManagerHelper.getEventDispatcherForReactTag`
+- Event names follow the convention: native `topVideoProgress` → JS `onVideoProgress`

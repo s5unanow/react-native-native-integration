@@ -3,6 +3,7 @@
 #import <React/RCTFabricComponentsPlugins.h>
 #import <react/renderer/components/RTNVideoPlayerSpec/ComponentDescriptors.h>
 #import <react/renderer/components/RTNVideoPlayerSpec/Props.h>
+#import <react/renderer/components/RTNVideoPlayerSpec/EventEmitters.h>
 #import "ReactNativeNativeIntegration-Swift.h"
 
 using namespace facebook::react;
@@ -23,6 +24,30 @@ using namespace facebook::react;
         _props = defaultProps;
 
         _view = [[RTNVideoPlayerViewSwift alloc] init];
+
+        // Setup event callbacks
+        __weak RTNVideoPlayerView *weakSelf = self;
+
+        _view.onVideoProgress = ^(NSDictionary *event) {
+            RTNVideoPlayerView *strongSelf = weakSelf;
+            if (strongSelf && strongSelf->_eventEmitter) {
+                double currentTime = [[event objectForKey:@"currentTime"] doubleValue];
+                double duration = [[event objectForKey:@"duration"] doubleValue];
+                double progress = [[event objectForKey:@"progress"] doubleValue];
+
+                auto emitter = std::static_pointer_cast<RTNVideoPlayerEventEmitter const>(strongSelf->_eventEmitter);
+                emitter->onVideoProgress({currentTime, duration, progress});
+            }
+        };
+
+        _view.onVideoEnd = ^(NSDictionary *event) {
+            RTNVideoPlayerView *strongSelf = weakSelf;
+            if (strongSelf && strongSelf->_eventEmitter) {
+                auto emitter = std::static_pointer_cast<RTNVideoPlayerEventEmitter const>(strongSelf->_eventEmitter);
+                emitter->onVideoEnd({});
+            }
+        };
+
         self.contentView = _view;
     }
     return self;
