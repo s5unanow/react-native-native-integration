@@ -13,8 +13,8 @@ Checkout each branch to follow along:
 | `step-2-ios` | iOS native implementation |
 | `step-3-android` | Android native implementation |
 | `step-4-usage` | Basic usage example |
-| **`step-5-events`** | **Progress & completion events** |
-| `step-6-commands` | Native commands (play/pause/seek) |
+| `step-5-events` | Progress & completion events |
+| **`step-6-commands`** | **Native commands (play/pause/seek)** |
 | `main` | Complete working example |
 
 ## Running
@@ -28,30 +28,28 @@ npm run android
 
 ## This Step
 
-Add native-to-JS events: video progress reporting and video end notification.
+Add imperative native commands: `play()`, `pause()`, and `seekTo(time)`.
 
-### What was changed
+### What was added
 
-- **`src/specs/RTNVideoPlayerNativeComponent.ts`** — Added event types to the Codegen spec
-  - `onVideoProgress`: `DirectEventHandler` with `currentTime`, `duration`, `progress` (all `Double`)
-  - `onVideoEnd`: `DirectEventHandler` with empty payload
-- **`src/components/VideoPlayer.tsx`** — Added `onProgress` and `onEnd` callback props
-  - Maps `onVideoProgress` native event → `onProgress` with unwrapped `nativeEvent`
-- **`RTNVideoPlayerViewSwift.swift`** (iOS) — Added progress timer and end observer
-  - 500ms `Timer` emits progress data while playing
-  - `NotificationCenter` observer for `AVPlayerItemDidPlayToEndTime`
-  - Proper cleanup in `deinit` and when re-setting source
-- **`RTNVideoPlayerView.kt`** (Android) — Added progress handler and end listener
-  - `Handler`/`Runnable` pattern emits progress every 500ms
-  - `Player.Listener.onPlaybackStateChanged` detects `STATE_ENDED`
-  - Custom `Event` subclasses: `VideoProgressEvent`, `VideoEndEvent`
-- **`RTNVideoPlayerManager.kt`** (Android) — Registered event type constants
-- **`RTNVideoPlayerView.mm`** (iOS) — Wired Swift callbacks to Fabric `EventEmitter`
-- **`App.tsx`** — Added progress bar and time display
+- **`src/specs/RTNVideoPlayerCommands.ts`** — Commands spec
+  - Uses `codegenNativeCommands` to define `play`, `pause`, `seekTo`
+  - `seekTo` takes a `Double` parameter (seconds)
+- **`src/components/VideoPlayer.tsx`** — Exposed commands via ref
+  - Converted to `forwardRef` with `useImperativeHandle`
+  - Exports `VideoPlayerRef` interface: `play()`, `pause()`, `seekTo(time)`
+  - Internally calls `Commands.play(nativeRef)` etc.
+- **`RTNVideoPlayerViewSwift.swift`** (iOS) — Added `play()`, `pause()`, `seekTo(_:)` methods
+- **`RTNVideoPlayerView.mm`** (iOS) — Implemented `handleCommand:args:` to dispatch commands
+- **`RTNVideoPlayerView.kt`** (Android) — Added `play()`, `commandPause()`, `seekTo()` methods
+- **`RTNVideoPlayerManager.kt`** (Android) — Overrode command methods from the generated interface
+- **`App.tsx`** — Added play/pause button, seek controls (-10s / +10s), restart on end
 
 ### Key Concepts
 
-- **`DirectEventHandler<T>`** in the Codegen spec generates event infrastructure on both platforms
-- iOS: Events flow through the Fabric `EventEmitter` (C++ → JS)
-- Android: Events use `Event` subclasses dispatched via `UIManagerHelper.getEventDispatcherForReactTag`
-- Event names follow the convention: native `topVideoProgress` → JS `onVideoProgress`
+- **`codegenNativeCommands`** generates type-safe command dispatchers for both platforms
+- Commands are the JS → native imperative API (opposite direction from events)
+- On JS side: `Commands.play(nativeRef)` sends the command to native
+- Consumer uses `useRef<VideoPlayerRef>` + `ref.current.play()` for a clean API
+- iOS receives commands via `handleCommand:args:` on the `RCTViewComponentView`
+- Android receives commands via the `ManagerInterface` override methods

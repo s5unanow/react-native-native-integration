@@ -39,6 +39,25 @@ class RTNVideoPlayerViewSwift: UIView {
         cleanup()
     }
 
+    // MARK: - Commands
+
+    @objc func play() {
+        player?.play()
+        updateProgressTimer()
+    }
+
+    @objc func pause() {
+        player?.pause()
+        updateProgressTimer()
+    }
+
+    @objc func seekTo(_ time: Double) {
+        let cmTime = CMTime(seconds: time, preferredTimescale: 1000)
+        player?.seek(to: cmTime)
+    }
+
+    // MARK: - Private Methods
+
     private func cleanup() {
         progressTimer?.invalidate()
         progressTimer = nil
@@ -88,7 +107,7 @@ class RTNVideoPlayerViewSwift: UIView {
         progressTimer?.invalidate()
         progressTimer = nil
 
-        if !paused {
+        if player?.rate ?? 0 > 0 {
             progressTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
                 self?.sendProgressEvent()
             }

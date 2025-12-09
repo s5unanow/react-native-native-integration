@@ -70,6 +70,22 @@ using namespace facebook::react;
     [super updateProps:props oldProps:oldProps];
 }
 
+#pragma mark - Commands
+
+- (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args
+{
+    if ([commandName isEqualToString:@"play"]) {
+        [_view play];
+    } else if ([commandName isEqualToString:@"pause"]) {
+        [_view pause];
+    } else if ([commandName isEqualToString:@"seekTo"]) {
+        if (args.count > 0) {
+            double time = [args[0] doubleValue];
+            [_view seekTo:time];
+        }
+    }
+}
+
 @end
 
 Class<RCTComponentViewProtocol> RTNVideoPlayerCls(void)

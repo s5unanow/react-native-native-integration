@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { VideoPlayer } from './src/components/VideoPlayer';
+import React, { useRef, useState } from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from 'react-native';
+import { VideoPlayer, VideoPlayerRef } from './src/components/VideoPlayer';
 
 // Sample video URL (Big Buck Bunny - free to use)
 const SAMPLE_VIDEO = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
@@ -12,10 +18,34 @@ function formatTime(seconds: number): string {
 }
 
 function App(): React.JSX.Element {
+  const playerRef = useRef<VideoPlayerRef>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [ended, setEnded] = useState(false);
+
+  const handlePlayPause = () => {
+    if (isPlaying) {
+      playerRef.current?.pause();
+    } else {
+      playerRef.current?.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleSeek = (direction: 'back' | 'forward') => {
+    const seekAmount = direction === 'back' ? -10 : 10;
+    const newTime = Math.max(0, Math.min(duration, currentTime + seekAmount));
+    playerRef.current?.seekTo(newTime);
+  };
+
+  const handleRestart = () => {
+    playerRef.current?.seekTo(0);
+    playerRef.current?.play();
+    setIsPlaying(true);
+    setEnded(false);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -24,6 +54,7 @@ function App(): React.JSX.Element {
       </View>
 
       <VideoPlayer
+        ref={playerRef}
         sourceUrl={SAMPLE_VIDEO}
         style={styles.player}
         onProgress={(data) => {
@@ -34,6 +65,7 @@ function App(): React.JSX.Element {
         }}
         onEnd={() => {
           setEnded(true);
+          setIsPlaying(false);
         }}
       />
 
@@ -45,6 +77,31 @@ function App(): React.JSX.Element {
           <Text style={styles.timeText}>{formatTime(currentTime)}</Text>
           <Text style={styles.timeText}>{formatTime(duration)}</Text>
         </View>
+      </View>
+
+      <View style={styles.controls}>
+        <TouchableOpacity
+          style={styles.controlButton}
+          onPress={() => handleSeek('back')}
+        >
+          <Text style={styles.controlButtonText}>-10s</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.controlButton, styles.playButton]}
+          onPress={ended ? handleRestart : handlePlayPause}
+        >
+          <Text style={styles.playButtonText}>
+            {ended ? 'Restart' : isPlaying ? 'Pause' : 'Play'}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.controlButton}
+          onPress={() => handleSeek('forward')}
+        >
+          <Text style={styles.controlButtonText}>+10s</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.info}>
@@ -96,6 +153,33 @@ const styles = StyleSheet.create({
   timeText: {
     color: '#888',
     fontSize: 12,
+  },
+  controls: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 20,
+    gap: 20,
+  },
+  controlButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: '#333',
+    borderRadius: 8,
+  },
+  controlButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  playButton: {
+    backgroundColor: '#3b82f6',
+    paddingHorizontal: 30,
+  },
+  playButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   info: {
     padding: 20,

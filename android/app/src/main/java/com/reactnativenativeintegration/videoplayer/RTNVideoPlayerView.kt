@@ -49,6 +49,22 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
         updateProgressReporting()
     }
 
+    // Commands
+    fun play() {
+        player?.playWhenReady = true
+        updateProgressReporting()
+    }
+
+    // Named commandPause to avoid conflict with Android View.pause() (API 24+)
+    fun commandPause() {
+        player?.playWhenReady = false
+        updateProgressReporting()
+    }
+
+    fun seekTo(time: Double) {
+        player?.seekTo((time * 1000).toLong())
+    }
+
     private fun setupPlayer(url: String) {
         releasePlayer()
 
@@ -74,7 +90,7 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
         progressRunnable?.let { handler.removeCallbacks(it) }
         progressRunnable = null
 
-        if (!isPaused) {
+        if (player?.playWhenReady == true) {
             progressRunnable = object : Runnable {
                 override fun run() {
                     emitProgressEvent()

@@ -1,5 +1,6 @@
 package com.reactnativenativeintegration.videoplayer
 
+import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.uimanager.SimpleViewManager
@@ -31,6 +32,19 @@ class RTNVideoPlayerManager : SimpleViewManager<RTNVideoPlayerView>(),
     @ReactProp(name = "paused")
     override fun setPaused(view: RTNVideoPlayerView, paused: Boolean) {
         view.setPaused(paused)
+    }
+
+    // Commands
+    override fun play(view: RTNVideoPlayerView) {
+        view.play()
+    }
+
+    override fun pause(view: RTNVideoPlayerView) {
+        view.commandPause()
+    }
+
+    override fun seekTo(view: RTNVideoPlayerView, time: Double) {
+        view.seekTo(time)
     }
 
     override fun getExportedCustomDirectEventTypeConstants(): Map<String, Any>? {
