@@ -8,8 +8,8 @@ Checkout each branch to follow along:
 
 | Branch | Description |
 |--------|-------------|
-| **`step-0-scaffold`** | **Clean RN 0.82 project** |
-| `step-1-js-spec` | TypeScript component spec |
+| `step-0-scaffold` | Clean RN 0.82 project |
+| **`step-1-js-spec`** | **TypeScript component spec** |
 | `step-2-ios` | iOS native implementation |
 | `step-3-android` | Android native implementation |
 | `step-4-usage` | Basic usage example |
@@ -28,11 +28,24 @@ npm run android
 
 ## This Step
 
-Starting point: a clean React Native 0.82 project scaffolded with `@react-native-community/cli`.
+Define the TypeScript Codegen spec for the `RTNVideoPlayer` Fabric component.
 
-- React Native **0.82.1** with React 19.1.1
-- New Architecture (Fabric) enabled by default
-- TypeScript configured
-- iOS and Android project structure ready
+### What was added
 
-No custom native code yet — this is the baseline we'll build on.
+- **`src/specs/RTNVideoPlayerNativeComponent.ts`** — Codegen spec defining the native component interface
+  - Uses `codegenNativeComponent()` to register with Fabric
+  - Props: `sourceUrl` (string), `paused` (boolean)
+  - Returns `HostComponent<NativeProps>` for type-safe usage
+- **`src/components/VideoPlayer.tsx`** — React wrapper component
+  - Abstracts the native component from app code
+  - Default 16:9 aspect ratio styling
+- **`package.json`** — Added `codegenConfig` section
+  - `name`: `RTNVideoPlayerSpec`
+  - `type`: `components` (Fabric view component)
+  - `jsSrcsDir`: `src/specs`
+
+### Key Concepts
+
+- **Codegen** reads TypeScript specs and generates native interfaces (C++, Java, ObjC)
+- Component name `'RTNVideoPlayer'` must match native implementations exactly
+- `HostComponent` is the Fabric type for native view components
