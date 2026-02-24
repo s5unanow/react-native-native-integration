@@ -26,6 +26,12 @@ npm run ios
 npm run android
 ```
 
+## Codegen Notes
+
+- After changing files in `src/specs/**`, re-run `cd ios && pod install && cd ..` so iOS codegen artifacts are regenerated.
+- Android codegen runs as part of the Gradle build; if you get stale types, try a clean rebuild (`cd android && ./gradlew clean`).
+- The codegen helpers are imported from `react-native/Libraries/...` in `src/specs/**` (ESLint deep-import warnings are disabled for specs only).
+
 ## Key Concepts
 
 - **Fabric Native Components**: Modern React Native architecture for native views
