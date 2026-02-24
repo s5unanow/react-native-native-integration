@@ -26,6 +26,11 @@ npm run ios
 npm run android
 ```
 
+## Codegen Notes
+
+- After changing files in `src/specs/**`, re-run `cd ios && pod install && cd ..` so iOS codegen artifacts are regenerated.
+- Android codegen runs as part of the Gradle build; if you get stale types, try a clean rebuild (`cd android && ./gradlew clean`).
+
 ## This Step
 
 Define the TypeScript Codegen spec for the `RTNVideoPlayer` Fabric component.
