@@ -49,4 +49,4 @@ Implement the iOS native side of the `RTNVideoPlayer` Fabric component using Obj
 
 - **`RCTViewComponentView`** is the Fabric base class for native views (replaces the old `RCTView`)
 - Props flow: JS → Codegen C++ structs → `updateProps:oldProps:` → Swift view
-- The `RTNVideoPlayerCls()` function registers the component with Fabric's plugin system
+- `RTNVideoPlayerCls()` exposes the Fabric `ComponentView` class; the app registers `"RTNVideoPlayer"` via `thirdPartyFabricComponents` (see `ios/ReactNativeNativeIntegration/AppDelegate.swift`)
