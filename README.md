@@ -26,6 +26,11 @@ npm run ios
 npm run android
 ```
 
+## Codegen Notes
+
+- After changing files in `src/specs/**`, re-run `cd ios && pod install && cd ..` so iOS codegen artifacts are regenerated.
+- Android codegen runs as part of the Gradle build; if you get stale types, try a clean rebuild (`cd android && ./gradlew clean`).
+
 ## This Step
 
 Implement the iOS native side of the `RTNVideoPlayer` Fabric component using Objective-C++ and Swift.
@@ -50,3 +55,4 @@ Implement the iOS native side of the `RTNVideoPlayer` Fabric component using Obj
 - **`RCTViewComponentView`** is the Fabric base class for native views (replaces the old `RCTView`)
 - Props flow: JS → Codegen C++ structs → `updateProps:oldProps:` → Swift view
 - `RTNVideoPlayerCls()` exposes the Fabric `ComponentView` class; the app registers `"RTNVideoPlayer"` via `thirdPartyFabricComponents` (see `ios/ReactNativeNativeIntegration/AppDelegate.swift`)
+- The codegen helpers are imported from `react-native/Libraries/...` in `src/specs/**` (ESLint deep-import warnings are disabled for specs only)
