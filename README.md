@@ -33,6 +33,7 @@ npm run android
 - **DirectEventHandler**: For events from native to JS
 - **codegenNativeCommands**: For imperative API (play/pause/seek)
 - **iOS**: RCTViewComponentView with Swift AVPlayer
+- **iOS registration**: app-level Fabric `ComponentView`s are wired via `thirdPartyFabricComponents` (see `ios/ReactNativeNativeIntegration/AppDelegate.swift`)
 - **Android**: SimpleViewManager with Fabric delegate and ExoPlayer
 
 ## Project Structure
