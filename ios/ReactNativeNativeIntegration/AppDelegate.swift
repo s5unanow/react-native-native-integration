@@ -45,4 +45,10 @@ class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
     Bundle.main.url(forResource: "main", withExtension: "jsbundle")
 #endif
   }
+
+  override func thirdPartyFabricComponents() -> [String : AnyClass]! {
+    var components = super.thirdPartyFabricComponents() ?? [:]
+    components["RTNVideoPlayer"] = RTNVideoPlayerView.self
+    return components
+  }
 }
