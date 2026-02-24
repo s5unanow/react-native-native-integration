@@ -26,6 +26,11 @@ npm run ios
 npm run android
 ```
 
+## Codegen Notes
+
+- After changing files in `src/specs/**`, re-run `cd ios && pod install && cd ..` so iOS codegen artifacts are regenerated.
+- Android codegen runs as part of the Gradle build; if you get stale types, try a clean rebuild (`cd android && ./gradlew clean`).
+
 ## This Step
 
 Add native-to-JS events: video progress reporting and video end notification.
@@ -57,3 +62,5 @@ Add native-to-JS events: video progress reporting and video end notification.
 - iOS: Events flow through the Fabric `EventEmitter` (C++ → JS)
 - Android: Events use `Event` subclasses dispatched via `UIManagerHelper.getEventDispatcherForReactTag`
 - Event names follow the convention: native `topVideoProgress` → JS `onVideoProgress`
+- iOS `RTNVideoPlayer` registration happens via `thirdPartyFabricComponents` (see `ios/ReactNativeNativeIntegration/AppDelegate.swift`)
+- The codegen helpers are imported from `react-native/Libraries/...` in `src/specs/**` (ESLint deep-import warnings are disabled for specs only)
