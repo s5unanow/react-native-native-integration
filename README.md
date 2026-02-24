@@ -40,10 +40,12 @@ Add native-to-JS events: video progress reporting and video end notification.
 - **`RTNVideoPlayerViewSwift.swift`** (iOS) — Added progress timer and end observer
   - 500ms `Timer` emits progress data while playing
   - `NotificationCenter` observer for `AVPlayerItemDidPlayToEndTime`
+  - Stops progress reporting when the video ends
   - Proper cleanup in `deinit` and when re-setting source
 - **`RTNVideoPlayerView.kt`** (Android) — Added progress handler and end listener
   - `Handler`/`Runnable` pattern emits progress every 500ms
   - `Player.Listener.onPlaybackStateChanged` detects `STATE_ENDED`
+  - Stops progress reporting when the video ends
   - Custom `Event` subclasses: `VideoProgressEvent`, `VideoEndEvent`
 - **`RTNVideoPlayerManager.kt`** (Android) — Registered event type constants
 - **`RTNVideoPlayerView.mm`** (iOS) — Wired Swift callbacks to Fabric `EventEmitter`
