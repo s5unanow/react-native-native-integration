@@ -26,6 +26,11 @@ npm run ios
 npm run android
 ```
 
+## Codegen Notes
+
+- After changing files in `src/specs/**`, re-run `cd ios && pod install && cd ..` so iOS codegen artifacts are regenerated.
+- Android codegen runs as part of the Gradle build; if you get stale types, try a clean rebuild (`cd android && ./gradlew clean`).
+
 ## This Step
 
 Implement the Android native side of the `RTNVideoPlayer` Fabric component using Kotlin.
@@ -51,3 +56,5 @@ Implement the Android native side of the `RTNVideoPlayer` Fabric component using
 - Android Fabric components use `SimpleViewManager` + a Codegen-generated `ManagerDelegate`
 - The `ManagerInterface` is auto-generated from the TypeScript spec — your ViewManager implements it
 - ExoPlayer (Media3) is the standard Android video playback library
+- iOS `RTNVideoPlayer` registration happens via `thirdPartyFabricComponents` (see `ios/ReactNativeNativeIntegration/AppDelegate.swift`)
+- The codegen helpers are imported from `react-native/Libraries/...` in `src/specs/**` (ESLint deep-import warnings are disabled for specs only)
