@@ -49,3 +49,4 @@ Define the TypeScript Codegen spec for the `RTNVideoPlayer` Fabric component.
 - **Codegen** reads TypeScript specs and generates native interfaces (C++, Java, ObjC)
 - Component name `'RTNVideoPlayer'` must match native implementations exactly
 - `HostComponent` is the Fabric type for native view components
+- The codegen helpers are imported from `react-native/Libraries/...` in `src/specs/**` (ESLint deep-import warnings are disabled for specs only)
