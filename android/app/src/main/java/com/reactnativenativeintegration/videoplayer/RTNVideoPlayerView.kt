@@ -77,6 +77,8 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
             addListener(object : Player.Listener {
                 override fun onPlaybackStateChanged(playbackState: Int) {
                     if (playbackState == Player.STATE_ENDED) {
+                        this@RTNVideoPlayerView.commandPause()
+                        emitProgressEvent()
                         emitVideoEndEvent()
                     }
                 }

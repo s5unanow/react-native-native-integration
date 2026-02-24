@@ -92,6 +92,8 @@ class RTNVideoPlayerViewSwift: UIView {
                 object: playerItem,
                 queue: .main
             ) { [weak self] _ in
+                self?.pause()
+                self?.sendProgressEvent()
                 self?.onVideoEnd?([:])
             }
         }
