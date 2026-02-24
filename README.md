@@ -26,6 +26,11 @@ npm run ios
 npm run android
 ```
 
+## Codegen Notes
+
+- After changing files in `src/specs/**`, re-run `cd ios && pod install && cd ..` so iOS codegen artifacts are regenerated.
+- Android codegen runs as part of the Gradle build; if you get stale types, try a clean rebuild (`cd android && ./gradlew clean`).
+
 ## This Step
 
 Add imperative native commands: `play()`, `pause()`, and `seekTo(time)`.
@@ -53,3 +58,5 @@ Add imperative native commands: `play()`, `pause()`, and `seekTo(time)`.
 - Consumer uses `useRef<VideoPlayerRef>` + `ref.current.play()` for a clean API
 - iOS receives commands via `handleCommand:args:` on the `RCTViewComponentView`
 - Android receives commands via the `ManagerInterface` override methods
+- iOS `RTNVideoPlayer` registration happens via `thirdPartyFabricComponents` (see `ios/ReactNativeNativeIntegration/AppDelegate.swift`)
+- The codegen helpers are imported from `react-native/Libraries/...` in `src/specs/**` (ESLint deep-import warnings are disabled for specs only)
