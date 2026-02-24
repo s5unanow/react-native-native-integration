@@ -26,6 +26,11 @@ npm run ios
 npm run android
 ```
 
+## Codegen Notes
+
+- After changing files in `src/specs/**`, re-run `cd ios && pod install && cd ..` so iOS codegen artifacts are regenerated.
+- Android codegen runs as part of the Gradle build; if you get stale types, try a clean rebuild (`cd android && ./gradlew clean`).
+
 ## This Step
 
 Wire the native component into the React app and play a video.
@@ -35,7 +40,8 @@ Wire the native component into the React app and play a video.
 - **`App.tsx`** — Replaced boilerplate with `VideoPlayer` usage
   - Renders `<VideoPlayer sourceUrl={SAMPLE_VIDEO} />` with a sample MP4
   - Simple layout: header, player (16:9), info text
-- **`ios/Info.plist`** — Enabled `NSAllowsArbitraryLoads` for HTTP video URLs
+- **`ios/Info.plist`** — Relaxed App Transport Security to allow loading remote video URLs
+- **`android/app/src/main/AndroidManifest.xml`** — Ensured `android.permission.INTERNET` is present for remote URLs
 
 ### What you should see
 
@@ -46,3 +52,5 @@ A working video player rendering Big Buck Bunny from a remote URL. The video pla
 - The `VideoPlayer` wrapper component hides the native `RTNVideoPlayer` from app code
 - Props flow: `sourceUrl` (JS) → Codegen → native view → AVPlayer / ExoPlayer
 - This is the first end-to-end test: JS spec + iOS native + Android native all connected
+- iOS `RTNVideoPlayer` registration happens via `thirdPartyFabricComponents` (see `ios/ReactNativeNativeIntegration/AppDelegate.swift`)
+- The codegen helpers are imported from `react-native/Libraries/...` in `src/specs/**` (ESLint deep-import warnings are disabled for specs only)
