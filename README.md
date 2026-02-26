@@ -36,3 +36,7 @@ Starting point: a clean React Native 0.82 project scaffolded with `@react-native
 - iOS and Android project structure ready
 
 No custom native code yet — this is the baseline we'll build on.
+
+## Slides
+
+- Lecture deck: `docs/slides/React Native View modules - Lection 3.pptx`
