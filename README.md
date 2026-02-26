@@ -64,3 +64,7 @@ Add native-to-JS events: video progress reporting and video end notification.
 - Event names follow the convention: native `topVideoProgress` → JS `onVideoProgress`
 - iOS `RTNVideoPlayer` registration happens via `thirdPartyFabricComponents` (see `ios/ReactNativeNativeIntegration/AppDelegate.swift`)
 - The codegen helpers are imported from `react-native/Libraries/...` in `src/specs/**` (ESLint deep-import warnings are disabled for specs only)
+
+## Slides
+
+- Lecture deck: `docs/slides/React Native View modules - Lection 3.pptx`
