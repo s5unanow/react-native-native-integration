@@ -56,3 +56,7 @@ Implement the iOS native side of the `RTNVideoPlayer` Fabric component using Obj
 - Props flow: JS → Codegen C++ structs → `updateProps:oldProps:` → Swift view
 - `RTNVideoPlayerCls()` exposes the Fabric `ComponentView` class; the app registers `"RTNVideoPlayer"` via `thirdPartyFabricComponents` (see `ios/ReactNativeNativeIntegration/AppDelegate.swift`)
 - The codegen helpers are imported from `react-native/Libraries/...` in `src/specs/**` (ESLint deep-import warnings are disabled for specs only)
+
+## Slides
+
+- Lecture deck: `docs/slides/React Native View modules - Lection 3.pptx`
