@@ -72,3 +72,7 @@ android/app/src/main/java/.../videoplayer/
 - Video end event
 - Native commands: play(), pause(), seekTo(time)
 - Full TypeScript type safety
+
+## Slides
+
+- Lecture deck: `docs/slides/React Native View modules - Lection 3.pptx`
