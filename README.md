@@ -58,3 +58,7 @@ Implement the Android native side of the `RTNVideoPlayer` Fabric component using
 - ExoPlayer (Media3) is the standard Android video playback library
 - iOS `RTNVideoPlayer` registration happens via `thirdPartyFabricComponents` (see `ios/ReactNativeNativeIntegration/AppDelegate.swift`)
 - The codegen helpers are imported from `react-native/Libraries/...` in `src/specs/**` (ESLint deep-import warnings are disabled for specs only)
+
+## Slides
+
+- Lecture deck: `docs/slides/React Native View modules - Lection 3.pptx`
