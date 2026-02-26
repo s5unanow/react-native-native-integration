@@ -54,3 +54,7 @@ A working video player rendering Big Buck Bunny from a remote URL. The video pla
 - This is the first end-to-end test: JS spec + iOS native + Android native all connected
 - iOS `RTNVideoPlayer` registration happens via `thirdPartyFabricComponents` (see `ios/ReactNativeNativeIntegration/AppDelegate.swift`)
 - The codegen helpers are imported from `react-native/Libraries/...` in `src/specs/**` (ESLint deep-import warnings are disabled for specs only)
+
+## Slides
+
+- Lecture deck: `docs/slides/React Native View modules - Lection 3.pptx`
