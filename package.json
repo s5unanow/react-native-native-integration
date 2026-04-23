@@ -8,6 +8,11 @@
     "jsSrcsDir": "src/specs",
     "android": {
       "javaPackageName": "com.reactnativenativeintegration.videoplayer"
+    },
+    "ios": {
+      "componentProvider": {
+        "RTNVideoPlayer": "RTNVideoPlayerView"
+      }
     }
   },
   "scripts": {
