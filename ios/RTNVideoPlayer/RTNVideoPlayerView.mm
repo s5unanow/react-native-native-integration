@@ -76,6 +76,26 @@ using namespace facebook::react;
   [super updateProps:props oldProps:oldProps];
 }
 
+- (void)play
+{
+  [_playerView play];
+}
+
+- (void)pause
+{
+  [_playerView pause];
+}
+
+- (void)seekTo:(double)time
+{
+  [_playerView seekTo:time];
+}
+
+- (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args
+{
+  RCTRTNVideoPlayerHandleCommand(self, commandName, args);
+}
+
 - (void)prepareForRecycle
 {
   [_playerView reset];

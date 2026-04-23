@@ -33,6 +33,18 @@ class RTNVideoPlayerManager :
         view.setPaused(paused)
     }
 
+    override fun play(view: RTNVideoPlayerView) {
+        view.playPlayback()
+    }
+
+    override fun pause(view: RTNVideoPlayerView) {
+        view.pausePlayback()
+    }
+
+    override fun seekTo(view: RTNVideoPlayerView, time: Double) {
+        view.seekTo(time)
+    }
+
     override fun onDropViewInstance(view: RTNVideoPlayerView) {
         view.release()
         super.onDropViewInstance(view)
