@@ -1,14 +1,16 @@
 # Fabric Video Player Demo
 
-A step-by-step example of building a Fabric Native Component in React Native 0.82.
+A step-by-step example of building a Fabric Native Component in React Native.
+
+The currently checked-in tutorial branches in this repository target React Native `0.82.1`. The active migration goal is to rebuild the tutorial as a clean React Native `0.85.1` branch ladder under the `RNN` Linear project.
 
 ## Branches
 
-Checkout each branch to follow along:
+This repo currently contains the historical lecture ladder:
 
 | Branch | Description |
 |--------|-------------|
-| `step-0-scaffold` | Clean RN 0.82 project |
+| `step-0-scaffold` | Clean RN 0.82.x project |
 | `step-1-js-spec` | TypeScript component spec + initial JS wrapper |
 | `step-2-ios` | iOS native implementation + app-level Fabric registration |
 | `step-3-android` | Android native implementation + manual package registration |
@@ -16,6 +18,20 @@ Checkout each branch to follow along:
 | `step-5-events` | Progress & completion events |
 | `step-6-commands` | Native commands (play/pause/seek) |
 | **`main`** | **Complete working example** |
+
+Planned migration ladder:
+
+| Branch | Description |
+|--------|-------------|
+| `rn85-step-0-scaffold` | Clean RN 0.85.1 scaffold baseline |
+| `rn85-step-1-js-spec` | JS spec and RN 0.85.1 tooling alignment |
+| `rn85-step-2-ios` | iOS Fabric implementation rebuild |
+| `rn85-step-3-android` | Android Fabric implementation rebuild |
+| `rn85-step-4-usage` | App usage example rebuild |
+| `rn85-step-5-events` | Progress and completion events rebuild |
+| `rn85-step-6-commands` | Native commands rebuild |
+
+The historical `step-*` branches remain as reference material. The RN `0.85.1` work is expected to land as a new clean ancestor chain rather than rewriting those existing lecture branches in place.
 
 ## Running
 
@@ -25,6 +41,8 @@ cd ios && pod install && cd ..
 npm run ios
 npm run android
 ```
+
+These commands describe the current checked-in branch family. The final RN `0.85.1` rebuild may update some supporting template details as the new ladder is validated.
 
 ## Codegen Notes
 
@@ -39,7 +57,7 @@ npm run android
 - **DirectEventHandler**: For events from native to JS
 - **codegenNativeCommands**: For imperative API (play/pause/seek)
 - **iOS**: RCTViewComponentView with Swift AVPlayer
-- **iOS registration**: app-level Fabric `ComponentView`s are wired via `thirdPartyFabricComponents` (see `ios/ReactNativeNativeIntegration/AppDelegate.swift`)
+- **iOS registration**: the current checked-in implementation uses app-level `thirdPartyFabricComponents`; the RN `0.85.1` migration is expected to revalidate this path against current Codegen guidance
 - **Android**: SimpleViewManager with Fabric delegate and ExoPlayer
 
 ## Project Structure
