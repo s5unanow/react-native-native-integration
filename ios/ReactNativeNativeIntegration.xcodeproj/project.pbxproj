@@ -12,6 +12,8 @@
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		B61B1DBB968BDA1CAAEDC660 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
+		RTNVP001A6F3F58F76C31003 /* RTNVideoPlayerViewSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = RTNVP001A6F3F58F76C31004 /* RTNVideoPlayerViewSwift.swift */; };
+		RTNVP001A6F3F58F76C31005 /* RTNVideoPlayerView.mm in Sources */ = {isa = PBXBuildFile; fileRef = RTNVP001A6F3F58F76C31006 /* RTNVideoPlayerView.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +27,9 @@
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ReactNativeNativeIntegration/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ReactNativeNativeIntegration/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		RTNVP001A6F3F58F76C31004 /* RTNVideoPlayerViewSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RTNVideoPlayerViewSwift.swift; sourceTree = "<group>"; };
+		RTNVP001A6F3F58F76C31006 /* RTNVideoPlayerView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = RTNVideoPlayerView.mm; sourceTree = "<group>"; };
+		RTNVP001A6F3F58F76C31007 /* RTNVideoPlayerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTNVideoPlayerView.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +76,7 @@
 			isa = PBXGroup;
 			children = (
 				13B07FAE1A68108700A75B9A /* ReactNativeNativeIntegration */,
+				RTNVP001A6F3F58F76C31009 /* RTNVideoPlayer */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
@@ -96,6 +102,17 @@
 				5709B34CF0A7D63546082F79 /* Pods-ReactNativeNativeIntegration.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		RTNVP001A6F3F58F76C31009 /* RTNVideoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				RTNVP001A6F3F58F76C31004 /* RTNVideoPlayerViewSwift.swift */,
+				RTNVP001A6F3F58F76C31007 /* RTNVideoPlayerView.h */,
+				RTNVP001A6F3F58F76C31006 /* RTNVideoPlayerView.mm */,
+			);
+			name = RTNVideoPlayer;
+			path = RTNVideoPlayer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -247,6 +264,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
+				RTNVP001A6F3F58F76C31003 /* RTNVideoPlayerViewSwift.swift in Sources */,
+				RTNVP001A6F3F58F76C31005 /* RTNVideoPlayerView.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

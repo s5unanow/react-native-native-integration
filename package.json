@@ -5,7 +5,12 @@
   "codegenConfig": {
     "name": "RTNVideoPlayerSpec",
     "type": "components",
-    "jsSrcsDir": "src/specs"
+    "jsSrcsDir": "src/specs",
+    "ios": {
+      "componentProvider": {
+        "RTNVideoPlayer": "RTNVideoPlayerView"
+      }
+    }
   },
   "scripts": {
     "android": "react-native run-android",
