@@ -124,6 +124,26 @@ using namespace facebook::react;
   [super updateProps:props oldProps:oldProps];
 }
 
+- (void)play
+{
+  [_playerView play];
+}
+
+- (void)pause
+{
+  [_playerView pause];
+}
+
+- (void)seekTo:(double)time
+{
+  [_playerView seekTo:time];
+}
+
+- (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args
+{
+  RCTRTNVideoPlayerHandleCommand(self, commandName, args);
+}
+
 - (void)prepareForRecycle
 {
   // Fabric related: Fabric can reuse native views. Let the base reset the

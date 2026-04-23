@@ -42,6 +42,18 @@ class RTNVideoPlayerManager :
         view.setPaused(paused)
     }
 
+    override fun play(view: RTNVideoPlayerView) {
+        view.playPlayback()
+    }
+
+    override fun pause(view: RTNVideoPlayerView) {
+        view.pausePlayback()
+    }
+
+    override fun seekTo(view: RTNVideoPlayerView, time: Double) {
+        view.seekTo(time)
+    }
+
     // Fabric related: React Native calls this when the native view is removed.
     // Implementation detail: Releasing here prevents ExoPlayer from continuing
     // playback after the component is gone.

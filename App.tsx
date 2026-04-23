@@ -1,11 +1,8 @@
-import {useMemo, useState} from 'react';
-import {
-  SafeAreaProvider,
-  SafeAreaView,
-} from 'react-native-safe-area-context';
-import {StatusBar, StyleSheet, Text, View} from 'react-native';
+import { useMemo, useRef, useState } from 'react';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StatusBar, StyleSheet, Text, View } from 'react-native';
 
-import {VideoPlayer} from './src/components/VideoPlayer';
+import { VideoPlayer, type VideoPlayerRef } from './src/components/VideoPlayer';
 
 const SAMPLE_VIDEO_URL =
   'https://media.w3.org/2010/05/sintel/trailer.mp4';
@@ -22,15 +19,42 @@ function formatTime(seconds: number): string {
 }
 
 function App() {
+  const playerRef = useRef<VideoPlayerRef>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [hasEnded, setHasEnded] = useState(false);
 
   const progressPercent = useMemo(
     () => `${Math.max(0, Math.min(progress, 1)) * 100}%` as `${number}%`,
     [progress],
   );
+
+  const seekBy = (offset: number) => {
+    const nextTime = Math.max(0, Math.min(duration, currentTime + offset));
+    playerRef.current?.seekTo(nextTime);
+  };
+
+  const togglePlayback = () => {
+    if (hasEnded) {
+      playerRef.current?.seekTo(0);
+      playerRef.current?.play();
+      setCurrentTime(0);
+      setProgress(0);
+      setHasEnded(false);
+      setIsPlaying(true);
+      return;
+    }
+
+    if (isPlaying) {
+      playerRef.current?.pause();
+      setIsPlaying(false);
+    } else {
+      playerRef.current?.play();
+      setIsPlaying(true);
+    }
+  };
 
   return (
     <SafeAreaProvider>
@@ -44,22 +68,31 @@ function App() {
         </View>
 
         <VideoPlayer
+          ref={playerRef}
           sourceUrl={SAMPLE_VIDEO_URL}
           style={styles.player}
           onProgress={event => {
+            const isAtEnd =
+              event.duration > 0 && event.currentTime >= event.duration;
+
             setCurrentTime(event.currentTime);
             setDuration(event.duration);
             setProgress(event.progress);
-            setHasEnded(false);
+            setHasEnded(isAtEnd);
+
+            if (isAtEnd) {
+              setIsPlaying(false);
+            }
           }}
           onEnd={() => {
             setHasEnded(true);
+            setIsPlaying(false);
           }}
         />
 
         <View style={styles.eventPanel}>
           <View style={styles.progressTrack}>
-            <View style={[styles.progressFill, {width: progressPercent}]} />
+            <View style={[styles.progressFill, { width: progressPercent }]} />
           </View>
 
           <View style={styles.timeRow}>
@@ -73,12 +106,62 @@ function App() {
               {hasEnded ? 'Ended' : 'Receiving progress'}
             </Text>
           </View>
+
+          <View style={styles.controlsRow}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Seek back 10 seconds"
+              disabled={duration <= 0}
+              onPress={() => seekBy(-10)}
+              style={({ pressed }) => [
+                styles.controlButton,
+                duration <= 0 && styles.controlButtonDisabled,
+                pressed && styles.controlButtonPressed,
+              ]}
+            >
+              <Text style={styles.controlButtonText}>-10s</Text>
+            </Pressable>
+
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={
+                hasEnded
+                  ? 'Restart video'
+                  : isPlaying
+                  ? 'Pause video'
+                  : 'Play video'
+              }
+              onPress={togglePlayback}
+              style={({ pressed }) => [
+                styles.playPauseButton,
+                pressed && styles.controlButtonPressed,
+              ]}
+            >
+              <Text style={styles.playPauseButtonText}>
+                {hasEnded ? 'Restart' : isPlaying ? 'Pause' : 'Play'}
+              </Text>
+            </Pressable>
+
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Seek forward 10 seconds"
+              disabled={duration <= 0}
+              onPress={() => seekBy(10)}
+              style={({ pressed }) => [
+                styles.controlButton,
+                duration <= 0 && styles.controlButtonDisabled,
+                pressed && styles.controlButtonPressed,
+              ]}
+            >
+              <Text style={styles.controlButtonText}>+10s</Text>
+            </Pressable>
+          </View>
         </View>
 
         <View style={styles.footer}>
           <Text style={styles.caption}>
-            AVPlayer and ExoPlayer emit the same progress payload:
-            currentTime, duration, and progress.
+            AVPlayer and ExoPlayer emit the same progress payload: currentTime,
+            duration, and progress.
           </Text>
         </View>
       </SafeAreaView>
@@ -153,6 +236,45 @@ const styles = StyleSheet.create({
     color: '#f7f8fb',
     fontSize: 14,
     fontWeight: '700',
+  },
+  controlsRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+    justifyContent: 'center',
+    marginTop: 18,
+  },
+  controlButton: {
+    alignItems: 'center',
+    backgroundColor: '#303541',
+    borderRadius: 8,
+    minWidth: 72,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  controlButtonDisabled: {
+    opacity: 0.45,
+  },
+  controlButtonPressed: {
+    opacity: 0.78,
+  },
+  controlButtonText: {
+    color: '#f7f8fb',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  playPauseButton: {
+    alignItems: 'center',
+    backgroundColor: '#47d18c',
+    borderRadius: 8,
+    minWidth: 110,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+  },
+  playPauseButtonText: {
+    color: '#14171f',
+    fontSize: 15,
+    fontWeight: '800',
   },
   footer: {
     paddingTop: 18,

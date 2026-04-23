@@ -1,9 +1,11 @@
-import React from 'react';
-import {StyleSheet} from 'react-native';
-import type {StyleProp, ViewStyle} from 'react-native';
+import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import { StyleSheet } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 
-import RTNVideoPlayer from '../specs/RTNVideoPlayerNativeComponent';
-import type {VideoProgressEvent} from '../specs/RTNVideoPlayerNativeComponent';
+import RTNVideoPlayer, {
+  Commands,
+} from '../specs/RTNVideoPlayerNativeComponent';
+import type { VideoProgressEvent } from '../specs/RTNVideoPlayerNativeComponent';
 
 export type VideoProgressData = {
   currentTime: number;
@@ -19,33 +21,60 @@ export interface VideoPlayerProps {
   onEnd?: () => void;
 }
 
-export const VideoPlayer: React.FC<VideoPlayerProps> = ({
-  sourceUrl,
-  paused = false,
-  style,
-  onProgress,
-  onEnd,
-}) => {
-  const handleProgress = onProgress
-    ? (event: {nativeEvent: VideoProgressEvent}) => {
-        onProgress({
-          currentTime: event.nativeEvent.currentTime,
-          duration: event.nativeEvent.duration,
-          progress: event.nativeEvent.progress,
-        });
-      }
-    : undefined;
+export interface VideoPlayerRef {
+  play: () => void;
+  pause: () => void;
+  seekTo: (time: number) => void;
+}
 
-  return (
-    <RTNVideoPlayer
-      sourceUrl={sourceUrl}
-      paused={paused}
-      style={[styles.player, style]}
-      onVideoProgress={handleProgress}
-      onVideoEnd={onEnd}
-    />
-  );
-};
+export const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
+  ({ sourceUrl, paused = false, style, onProgress, onEnd }, ref) => {
+    const nativeRef = useRef<React.ElementRef<typeof RTNVideoPlayer>>(null);
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        play: () => {
+          if (nativeRef.current) {
+            Commands.play(nativeRef.current);
+          }
+        },
+        pause: () => {
+          if (nativeRef.current) {
+            Commands.pause(nativeRef.current);
+          }
+        },
+        seekTo: (time: number) => {
+          if (nativeRef.current) {
+            Commands.seekTo(nativeRef.current, time);
+          }
+        },
+      }),
+      [],
+    );
+
+    const handleProgress = onProgress
+      ? (event: { nativeEvent: VideoProgressEvent }) => {
+          onProgress({
+            currentTime: event.nativeEvent.currentTime,
+            duration: event.nativeEvent.duration,
+            progress: event.nativeEvent.progress,
+          });
+        }
+      : undefined;
+
+    return (
+      <RTNVideoPlayer
+        ref={nativeRef}
+        sourceUrl={sourceUrl}
+        paused={paused}
+        style={[styles.player, style]}
+        onVideoProgress={handleProgress}
+        onVideoEnd={onEnd}
+      />
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   player: {

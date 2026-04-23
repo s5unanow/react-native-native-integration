@@ -77,6 +77,54 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
         }
     }
 
+    fun playPlayback() {
+        isPaused = false
+
+        if (hasEnded) {
+            return
+        }
+
+        player?.playWhenReady = true
+        startProgressReporting()
+    }
+
+    fun pausePlayback() {
+        isPaused = true
+        player?.playWhenReady = false
+        stopProgressReporting()
+    }
+
+    fun seekTo(time: Double) {
+        val player = player ?: return
+        val duration = player.duration.takeIf { it > 0 }
+        val targetPosition = (time.takeIf { it.isFinite() } ?: 0.0)
+            .coerceAtLeast(0.0)
+            .times(1000)
+            .toLong()
+        val boundedPosition = duration?.let { targetPosition.coerceAtMost(it) } ?: targetPosition
+        val seeksToEnd = duration != null && boundedPosition >= duration
+
+        if (!seeksToEnd) {
+            hasEnded = false
+        }
+
+        player.seekTo(boundedPosition)
+
+        if (seeksToEnd) {
+            handlePlaybackEnded()
+        } else {
+            emitProgressEvent()
+
+            if (isPaused || hasEnded) {
+                player.playWhenReady = false
+                stopProgressReporting()
+            } else {
+                player.playWhenReady = true
+                startProgressReporting()
+            }
+        }
+    }
+
     fun release() {
         // Implementation detail: Detach and release ExoPlayer so recycled or
         // removed native views cannot keep playing media.
@@ -154,6 +202,7 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
         }
 
         hasEnded = true
+        isPaused = true
         player?.playWhenReady = false
         stopProgressReporting()
         emitProgressEvent()

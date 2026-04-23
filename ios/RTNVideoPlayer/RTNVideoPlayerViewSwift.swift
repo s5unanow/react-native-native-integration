@@ -69,6 +69,54 @@ class RTNVideoPlayerViewSwift: UIView {
     paused = false
   }
 
+  @objc func play() {
+    paused = false
+
+    guard !hasEnded else {
+      return
+    }
+
+    player?.play()
+    startProgressReporting()
+  }
+
+  @objc func pause() {
+    paused = true
+    player?.pause()
+    stopProgressReporting()
+  }
+
+  @objc func seekTo(_ time: Double) {
+    guard let player else {
+      return
+    }
+
+    let duration = CMTimeGetSeconds(player.currentItem?.duration ?? .invalid)
+    let targetTime = time.isFinite ? max(0, time) : 0
+    let boundedTime = duration.isFinite && duration > 0 ? min(targetTime, duration) : targetTime
+    let seeksToEnd = duration.isFinite && duration > 0 && boundedTime >= duration
+
+    if !seeksToEnd {
+      hasEnded = false
+    }
+
+    player.seek(to: CMTime(seconds: boundedTime, preferredTimescale: 1000)) {
+      [weak self] _ in
+      DispatchQueue.main.async {
+        guard let self else {
+          return
+        }
+
+        if seeksToEnd {
+          self.handlePlaybackEnded()
+        } else {
+          self.sendProgressEvent()
+          self.applyPlaybackState()
+        }
+      }
+    }
+  }
+
   private func configurePlayer() {
     // Implementation detail: A source change replaces the whole AVPlayer
     // pipeline. This avoids keeping old items, layers, or playback state
@@ -171,6 +219,7 @@ class RTNVideoPlayerViewSwift: UIView {
     }
 
     hasEnded = true
+    paused = true
     player?.pause()
     stopProgressReporting()
     sendProgressEvent()
