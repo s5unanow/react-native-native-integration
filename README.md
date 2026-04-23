@@ -9,10 +9,10 @@ Checkout each branch to follow along:
 | Branch | Description |
 |--------|-------------|
 | `step-0-scaffold` | Clean RN 0.82 project |
-| `step-1-js-spec` | TypeScript component spec |
-| `step-2-ios` | iOS native implementation |
-| `step-3-android` | Android native implementation |
-| `step-4-usage` | Basic usage example |
+| `step-1-js-spec` | TypeScript component spec + initial JS wrapper |
+| `step-2-ios` | iOS native implementation + app-level Fabric registration |
+| `step-3-android` | Android native implementation + manual package registration |
+| `step-4-usage` | Basic `App.tsx` usage example |
 | `step-5-events` | Progress & completion events |
 | `step-6-commands` | Native commands (play/pause/seek) |
 | **`main`** | **Complete working example** |
