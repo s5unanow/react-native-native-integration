@@ -38,6 +38,13 @@ class RTNVideoPlayerManager :
         super.onDropViewInstance(view)
     }
 
+    override fun getExportedCustomDirectEventTypeConstants(): Map<String, Any> {
+        return mapOf(
+            "topVideoProgress" to mapOf("registrationName" to "onVideoProgress"),
+            "topVideoEnd" to mapOf("registrationName" to "onVideoEnd"),
+        )
+    }
+
     companion object {
         const val NAME = "RTNVideoPlayer"
     }

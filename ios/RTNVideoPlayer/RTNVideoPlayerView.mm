@@ -1,6 +1,7 @@
 #import "RTNVideoPlayerView.h"
 
 #import <react/renderer/components/RTNVideoPlayerSpec/ComponentDescriptors.h>
+#import <react/renderer/components/RTNVideoPlayerSpec/EventEmitters.h>
 #import <react/renderer/components/RTNVideoPlayerSpec/Props.h>
 #import <react/renderer/components/RTNVideoPlayerSpec/RCTComponentViewHelpers.h>
 
@@ -27,6 +28,32 @@ using namespace facebook::react;
     _props = defaultProps;
 
     _playerView = [[RTNVideoPlayerViewSwift alloc] initWithFrame:CGRectZero];
+    __weak RTNVideoPlayerView *weakSelf = self;
+
+    _playerView.onVideoProgress = ^(NSDictionary *event) {
+      RTNVideoPlayerView *strongSelf = weakSelf;
+      if (!strongSelf || !strongSelf->_eventEmitter) {
+        return;
+      }
+
+      auto emitter = std::static_pointer_cast<RTNVideoPlayerEventEmitter const>(strongSelf->_eventEmitter);
+      emitter->onVideoProgress({
+        [[event objectForKey:@"currentTime"] doubleValue],
+        [[event objectForKey:@"duration"] doubleValue],
+        [[event objectForKey:@"progress"] doubleValue],
+      });
+    };
+
+    _playerView.onVideoEnd = ^(__unused NSDictionary *event) {
+      RTNVideoPlayerView *strongSelf = weakSelf;
+      if (!strongSelf || !strongSelf->_eventEmitter) {
+        return;
+      }
+
+      auto emitter = std::static_pointer_cast<RTNVideoPlayerEventEmitter const>(strongSelf->_eventEmitter);
+      emitter->onVideoEnd({});
+    };
+
     self.contentView = _playerView;
   }
 
