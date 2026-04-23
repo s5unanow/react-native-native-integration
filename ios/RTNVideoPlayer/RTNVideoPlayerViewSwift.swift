@@ -10,6 +10,12 @@ class RTNVideoPlayerViewSwift: UIView {
   // the video frames inside this UIView's Core Animation layer tree.
   private var player: AVPlayer?
   private var playerLayer: AVPlayerLayer?
+  private var progressObserver: Any?
+  private var endObserver: NSObjectProtocol?
+  private var hasEnded = false
+
+  @objc var onVideoProgress: (([String: Any]) -> Void)?
+  @objc var onVideoEnd: (([String: Any]) -> Void)?
 
   // Fabric related: Objective-C++ writes this prop when Fabric receives a new
   // sourceUrl from JS.
@@ -64,6 +70,7 @@ class RTNVideoPlayerViewSwift: UIView {
     // pipeline. This avoids keeping old items, layers, or playback state
     // attached to a reused Fabric view.
     cleanupPlayer()
+    hasEnded = false
 
     let urlString = (sourceUrl as String).trimmingCharacters(in: .whitespacesAndNewlines)
     guard !urlString.isEmpty, let url = URL(string: urlString) else {
@@ -79,6 +86,14 @@ class RTNVideoPlayerViewSwift: UIView {
     player = nextPlayer
     playerLayer = nextPlayerLayer
 
+    endObserver = NotificationCenter.default.addObserver(
+      forName: .AVPlayerItemDidPlayToEndTime,
+      object: nextPlayer.currentItem,
+      queue: .main
+    ) { [weak self] _ in
+      self?.handlePlaybackEnded()
+    }
+
     applyPlaybackState()
   }
 
@@ -88,18 +103,87 @@ class RTNVideoPlayerViewSwift: UIView {
     // models.
     if paused {
       player?.pause()
+      stopProgressReporting()
     } else {
+      guard !hasEnded else {
+        return
+      }
+
       player?.play()
+      startProgressReporting()
     }
   }
 
   private func cleanupPlayer() {
     // Implementation detail: Stop playback and remove the rendering layer so a
     // recycled view cannot keep playing or displaying stale video content.
+    stopProgressReporting()
+
+    if let endObserver {
+      NotificationCenter.default.removeObserver(endObserver)
+      self.endObserver = nil
+    }
+
     player?.pause()
     playerLayer?.removeFromSuperlayer()
     playerLayer = nil
     player = nil
+    hasEnded = false
+  }
+
+  private func startProgressReporting() {
+    guard progressObserver == nil, let player else {
+      return
+    }
+
+    let interval = CMTime(seconds: 0.5, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+    progressObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) {
+      [weak self] _ in
+      self?.sendProgressEvent()
+    }
+  }
+
+  private func stopProgressReporting() {
+    guard let progressObserver, let player else {
+      self.progressObserver = nil
+      return
+    }
+
+    player.removeTimeObserver(progressObserver)
+    self.progressObserver = nil
+  }
+
+  private func handlePlaybackEnded() {
+    guard !hasEnded else {
+      return
+    }
+
+    hasEnded = true
+    player?.pause()
+    stopProgressReporting()
+    sendProgressEvent()
+    onVideoEnd?([:])
+  }
+
+  private func sendProgressEvent() {
+    guard let player, let currentItem = player.currentItem else {
+      return
+    }
+
+    let currentTime = CMTimeGetSeconds(player.currentTime())
+    let duration = CMTimeGetSeconds(currentItem.duration)
+
+    guard currentTime.isFinite, duration.isFinite, duration > 0 else {
+      return
+    }
+
+    let reportedCurrentTime = min(max(currentTime, 0), duration)
+
+    onVideoProgress?([
+      "currentTime": reportedCurrentTime,
+      "duration": duration,
+      "progress": reportedCurrentTime / duration,
+    ])
   }
 
   override func layoutSubviews() {
