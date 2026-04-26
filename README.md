@@ -83,7 +83,7 @@ npm run android
 
 ## Codegen Notes
 
-- After changing files in `src/specs/**`, re-run `cd ios && pod install && cd ..` so iOS Codegen artifacts are regenerated.
+- After changing files in `src/specs/**`, re-run `cd ios && bundle exec pod install && cd ..` so iOS Codegen artifacts are regenerated.
 - Android Codegen runs as part of the Gradle build; if generated types become stale, run a clean rebuild from `android/`.
 - RN `0.85.1` exposes `codegenNativeComponent` from the public `react-native` entry point, so this branch does not need a deep-import ESLint exception for the spec.
 
