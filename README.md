@@ -54,7 +54,7 @@ Package and template targets verified from the published React Native `0.85.1` p
 | Area | Target |
 |------|--------|
 | Runtime packages | `react-native@0.85.1`, `react@19.2.3`, `react-test-renderer@19.2.3` |
-| React Native packages | `@react-native/new-app-screen@0.85.1`, `@react-native/babel-preset@0.85.1`, `@react-native/eslint-config@0.85.1`, `@react-native/jest-preset@0.85.1`, `@react-native/metro-config@0.85.1`, `@react-native/typescript-config@0.85.1` |
+| React Native packages | `@react-native/babel-preset@0.85.1`, `@react-native/eslint-config@0.85.1`, `@react-native/jest-preset@0.85.1`, `@react-native/metro-config@0.85.1`, `@react-native/typescript-config@0.85.1` |
 | CLI packages | `@react-native-community/cli@20.1.0`, `@react-native-community/cli-platform-android@20.1.0`, `@react-native-community/cli-platform-ios@20.1.0` |
 | Testing and TypeScript | `jest@^29.6.3`, `@types/jest@^29.5.13`, `@types/react@^19.2.0`, `@types/react-test-renderer@^19.1.0`, `typescript@^5.8.3`; Jest preset must move from `react-native` to `@react-native/jest-preset` |
 | Android template | Gradle wrapper `9.3.1`, Android Gradle Plugin `8.12.0` via `@react-native/gradle-plugin@0.85.1`, Kotlin `2.1.20`, Android SDK `36`, min SDK `24`, NDK `27.1.12297006` |
