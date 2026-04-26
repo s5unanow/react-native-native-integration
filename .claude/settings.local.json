@@ -6,7 +6,7 @@
       "Bash(mkdir:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(pod install)"
+      "Bash(bundle exec pod install)"
     ]
   }
 }

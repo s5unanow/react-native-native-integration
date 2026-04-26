@@ -76,7 +76,7 @@ Success criteria for the rebuilt ladder:
 - Each `rn85-step-*` branch has exactly the previous target branch as its ancestor and no wholesale merge from `main` or historical `step-*` branches.
 - Each step stays teachable: scaffold, JS spec, iOS, Android, usage, events, and commands are introduced in that order with no future-step code leaking backward.
 - Dependency and template churn is isolated to the scaffold/tooling step unless a later platform step has a specific RN `0.85.1` reason to change it.
-- iOS validates `pod install`, Codegen output, Fabric registration, build/run, playback, events, and commands on the branch where each feature is introduced.
+- iOS validates `bundle exec pod install`, Codegen output, Fabric registration, build/run, playback, events, and commands on the branch where each feature is introduced.
 - Android validates Gradle sync/build, Codegen output, package registration, playback, events, and commands on the branch where each feature is introduced.
 
 Known risks for later validation:
@@ -102,7 +102,7 @@ Baseline characteristics:
 
 ```bash
 npm install
-cd ios && pod install && cd ..
+cd ios && bundle exec pod install && cd ..
 npm run ios
 npm run android
 ```
