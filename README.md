@@ -2,7 +2,7 @@
 
 A step-by-step tutorial repo for building a Fabric Native Component in React Native.
 
-This branch adds the iOS native implementation for the `RTNVideoPlayer` Fabric component. Android playback is added in the next step.
+This branch adds the Android native implementation for the `RTNVideoPlayer` Fabric component, matching the iOS implementation from the previous step.
 
 ## Branches
 
@@ -48,8 +48,6 @@ Add the Android native implementation for the `RTNVideoPlayer` Fabric component.
   - Applies the generated `sourceUrl` and `paused` props.
 - `android/app/src/main/java/com/reactnativenativeintegration/videoplayer/RTNVideoPlayerPackage.kt` registers the view manager in a React package.
 - `android/app/src/main/java/com/reactnativenativeintegration/MainApplication.kt` manually adds `RTNVideoPlayerPackage` to the app package list.
-
-Later tutorial branches should add usage, events, and commands in the documented ladder order.
 
 ## Slides
 
