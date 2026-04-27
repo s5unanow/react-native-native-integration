@@ -2,7 +2,7 @@
 
 A step-by-step tutorial repo for building a Fabric Native Component in React Native.
 
-This branch adds the JavaScript-facing `RTNVideoPlayer` Fabric component spec and a small React wrapper on top of the clean React Native `0.85.1` scaffold. It intentionally stops before any iOS or Android native video implementation; later `rn85-step-*` branches add those tutorial layers one step at a time.
+This branch adds the JavaScript-facing `RTNVideoPlayer` Fabric component spec and a small React wrapper on top of the clean React Native `0.85.1` scaffold. It intentionally stops before any iOS or Android native video implementation; later `step-*` branches add those tutorial layers one step at a time.
 
 ## Branches
 
@@ -62,7 +62,7 @@ Known risks for later validation:
 
 ## Base Scaffold
 
-The parent `rn85-step-0-scaffold` branch was generated from the React Native CLI template for `react-native@0.85.1` using the app name `ReactNativeNativeIntegration` and the default Android package `com.reactnativenativeintegration`.
+The parent `step-0-scaffold` branch was generated from the React Native CLI template for `react-native@0.85.1` using the app name `ReactNativeNativeIntegration` and the default Android package `com.reactnativenativeintegration`.
 
 Baseline characteristics:
 
