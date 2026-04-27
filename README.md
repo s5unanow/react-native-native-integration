@@ -2,7 +2,7 @@
 
 A step-by-step tutorial repo for building a Fabric Native Component in React Native.
 
-This branch adds the JavaScript-facing `RTNVideoPlayer` Fabric component spec and a small React wrapper. It intentionally stops before adding native iOS or Android video playback.
+This branch adds the iOS native implementation for the `RTNVideoPlayer` Fabric component. Android playback is added in the next step.
 
 ## Branches
 
@@ -38,7 +38,7 @@ Add the iOS native implementation for the `RTNVideoPlayer` Fabric component.
 ### What was added
 
 - `ios/RTNVideoPlayer/RTNVideoPlayerView.h` declares the Fabric component view.
-- `ios/RTNVideoPlayer/RTNVideoPlayerView.mm` bridges the generated Codegen props into the UIKit-backed view.
+- `ios/RTNVideoPlayer/RTNVideoPlayerView.mm` bridges generated Codegen props into the UIKit-backed view.
   - Registers the `RTNVideoPlayer` component descriptor.
   - Applies `sourceUrl` and `paused` prop updates.
   - Resets native playback state when Fabric recycles the view.
@@ -48,8 +48,6 @@ Add the iOS native implementation for the `RTNVideoPlayer` Fabric component.
   - Keeps the video layer sized to the React Native view bounds.
 - `package.json` adds `codegenConfig.ios.componentProvider` so Codegen can provide `RTNVideoPlayerView` for the Fabric component.
 - `ios/ReactNativeNativeIntegration.xcodeproj/project.pbxproj` includes the new native iOS source files in the app target.
-
-Later tutorial branches should add Android implementation, usage, events, and commands in the documented ladder order.
 
 ## Slides
 
