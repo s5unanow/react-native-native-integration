@@ -33,21 +33,23 @@ npm run android
 
 ## This Step
 
-Add the iOS native implementation for the `RTNVideoPlayer` Fabric component.
+Add the Android native implementation for the `RTNVideoPlayer` Fabric component.
 
 ### What was added
 
-- `ios/RTNVideoPlayer/RTNVideoPlayerView.h` declares the Fabric component view.
-- `ios/RTNVideoPlayer/RTNVideoPlayerView.mm` bridges generated Codegen props into the UIKit-backed view.
-  - Registers the `RTNVideoPlayer` component descriptor.
-  - Applies `sourceUrl` and `paused` prop updates.
-  - Resets native playback state when Fabric recycles the view.
-- `ios/RTNVideoPlayer/RTNVideoPlayerViewSwift.swift` implements the native player with `AVPlayer` and `AVPlayerLayer`.
-  - Creates playback from `sourceUrl`.
-  - Plays or pauses from the `paused` prop.
-  - Keeps the video layer sized to the React Native view bounds.
-- `package.json` adds `codegenConfig.ios.componentProvider` so Codegen can provide `RTNVideoPlayerView` for the Fabric component.
-- `ios/ReactNativeNativeIntegration.xcodeproj/project.pbxproj` includes the new native iOS source files in the app target.
+- `android/app/build.gradle` adds the AndroidX Media3 ExoPlayer dependencies used by the native view.
+- `android/app/src/main/java/com/reactnativenativeintegration/videoplayer/RTNVideoPlayerView.kt` implements the native Android player view.
+  - Hosts a Media3 `PlayerView`.
+  - Creates an `ExoPlayer` for `sourceUrl`.
+  - Applies `paused` by updating `playWhenReady`.
+  - Releases the player when the React Native view is dropped or detached.
+- `android/app/src/main/java/com/reactnativenativeintegration/videoplayer/RTNVideoPlayerManager.kt` exposes the Fabric component view manager.
+  - Uses the generated `RTNVideoPlayerManagerDelegate`.
+  - Applies the generated `sourceUrl` and `paused` props.
+- `android/app/src/main/java/com/reactnativenativeintegration/videoplayer/RTNVideoPlayerPackage.kt` registers the view manager in a React package.
+- `android/app/src/main/java/com/reactnativenativeintegration/MainApplication.kt` manually adds `RTNVideoPlayerPackage` to the app package list.
+
+Later tutorial branches should add usage, events, and commands in the documented ladder order.
 
 ## Slides
 
