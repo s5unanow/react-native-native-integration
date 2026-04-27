@@ -2,7 +2,7 @@
 
 A step-by-step tutorial repo for building a Fabric Native Component in React Native.
 
-This branch adds the Android native implementation for the `RTNVideoPlayer` Fabric component, matching the iOS implementation from the previous step.
+This branch renders the `VideoPlayer` wrapper from the app so the native iOS and Android views are visible in a real screen.
 
 ## Branches
 
@@ -33,21 +33,14 @@ npm run android
 
 ## This Step
 
-Add the Android native implementation for the `RTNVideoPlayer` Fabric component.
+Render the Fabric video player from React Native app code.
 
 ### What was added
 
-- `android/app/build.gradle` adds the AndroidX Media3 ExoPlayer dependencies used by the native view.
-- `android/app/src/main/java/com/reactnativenativeintegration/videoplayer/RTNVideoPlayerView.kt` implements the native Android player view.
-  - Hosts a Media3 `PlayerView`.
-  - Creates an `ExoPlayer` for `sourceUrl`.
-  - Applies `paused` by updating `playWhenReady`.
-  - Releases the player when the React Native view is dropped or detached.
-- `android/app/src/main/java/com/reactnativenativeintegration/videoplayer/RTNVideoPlayerManager.kt` exposes the Fabric component view manager.
-  - Uses the generated `RTNVideoPlayerManagerDelegate`.
-  - Applies the generated `sourceUrl` and `paused` props.
-- `android/app/src/main/java/com/reactnativenativeintegration/videoplayer/RTNVideoPlayerPackage.kt` registers the view manager in a React package.
-- `android/app/src/main/java/com/reactnativenativeintegration/MainApplication.kt` manually adds `RTNVideoPlayerPackage` to the app package list.
+- `App.tsx` imports the `VideoPlayer` React wrapper.
+- A sample video URL is passed as `sourceUrl`.
+- The screen includes simple header and footer copy for the demo.
+- The same JSX component is backed by `AVPlayer` on iOS and ExoPlayer on Android.
 
 ## Slides
 
