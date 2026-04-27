@@ -15,6 +15,7 @@ class RTNVideoPlayerViewSwift: UIView {
   private var progressObserver: Any?
   private var endObserver: NSObjectProtocol?
   private var hasEnded = false
+  private var playerGeneration = 0
 
   // Fabric related: Objective-C++ assigns these closures and forwards them to
   // the generated Fabric event emitter.
@@ -91,6 +92,7 @@ class RTNVideoPlayerViewSwift: UIView {
       return
     }
 
+    let seekGeneration = playerGeneration
     let duration = CMTimeGetSeconds(player.currentItem?.duration ?? .invalid)
     let targetTime = time.isFinite ? max(0, time) : 0
     let boundedTime = duration.isFinite && duration > 0 ? min(targetTime, duration) : targetTime
@@ -104,6 +106,10 @@ class RTNVideoPlayerViewSwift: UIView {
       [weak self] _ in
       DispatchQueue.main.async {
         guard let self else {
+          return
+        }
+
+        guard self.player === player, self.playerGeneration == seekGeneration else {
           return
         }
 
@@ -171,6 +177,7 @@ class RTNVideoPlayerViewSwift: UIView {
   private func cleanupPlayer() {
     // Implementation detail: Stop playback and remove the rendering layer so a
     // recycled view cannot keep playing or displaying stale video content.
+    playerGeneration += 1
     stopProgressReporting()
 
     if let endObserver {
