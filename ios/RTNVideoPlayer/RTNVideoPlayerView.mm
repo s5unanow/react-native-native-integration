@@ -38,12 +38,12 @@ using namespace facebook::react;
   const auto &oldViewProps = *std::static_pointer_cast<RTNVideoPlayerProps const>(_props);
   const auto &newViewProps = *std::static_pointer_cast<RTNVideoPlayerProps const>(props);
 
-  if (oldViewProps.sourceUrl != newViewProps.sourceUrl) {
-    _playerView.sourceUrl = [NSString stringWithUTF8String:newViewProps.sourceUrl.c_str()];
-  }
-
   if (oldViewProps.paused != newViewProps.paused) {
     _playerView.paused = newViewProps.paused;
+  }
+
+  if (oldViewProps.sourceUrl != newViewProps.sourceUrl) {
+    _playerView.sourceUrl = [NSString stringWithUTF8String:newViewProps.sourceUrl.c_str()];
   }
 
   [super updateProps:props oldProps:oldProps];
@@ -51,12 +51,18 @@ using namespace facebook::react;
 
 - (void)prepareForRecycle
 {
+  [super prepareForRecycle];
+
   [_playerView reset];
 
   static const auto defaultProps = std::make_shared<const RTNVideoPlayerProps>();
   _props = defaultProps;
+}
 
-  [super prepareForRecycle];
+- (void)invalidate
+{
+  [super invalidate];
+  [_playerView reset];
 }
 
 @end
