@@ -2,7 +2,7 @@
 
 A step-by-step tutorial repo for building a Fabric Native Component in React Native.
 
-This branch renders the `VideoPlayer` wrapper from the app so the native iOS and Android views are visible in a real screen.
+This branch adds progress and completion events from the native video player back to React Native.
 
 ## Branches
 
@@ -33,14 +33,17 @@ npm run android
 
 ## This Step
 
-Render the Fabric video player from React Native app code.
+Send playback progress and completion events from native code to JavaScript.
 
 ### What was added
 
-- `App.tsx` imports the `VideoPlayer` React wrapper.
-- A sample video URL is passed as `sourceUrl`.
-- The screen includes simple header and footer copy for the demo.
-- The same JSX component is backed by `AVPlayer` on iOS and ExoPlayer on Android.
+- `src/specs/RTNVideoPlayerNativeComponent.ts` declares `onVideoProgress` and `onVideoEnd` direct events.
+- `src/components/VideoPlayer.tsx` exposes those native events as `onProgress` and `onEnd` wrapper props.
+- `ios/RTNVideoPlayer/RTNVideoPlayerView.mm` forwards Swift callbacks through the generated Fabric event emitter.
+- `ios/RTNVideoPlayer/RTNVideoPlayerViewSwift.swift` reports progress and video completion from `AVPlayer`.
+- `android/app/src/main/java/com/reactnativenativeintegration/videoplayer/RTNVideoPlayerManager.kt` exports the direct event registration names.
+- `android/app/src/main/java/com/reactnativenativeintegration/videoplayer/RTNVideoPlayerView.kt` dispatches progress and completion events from ExoPlayer.
+- `App.tsx` renders progress, duration, and end state received from native events.
 
 ## Slides
 
