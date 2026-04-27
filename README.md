@@ -33,21 +33,23 @@ npm run android
 
 ## This Step
 
-Define the TypeScript Codegen spec for the `RTNVideoPlayer` Fabric component and add a teaching-friendly React wrapper.
+Add the iOS native implementation for the `RTNVideoPlayer` Fabric component.
 
 ### What was added
 
-- `src/specs/RTNVideoPlayerNativeComponent.ts` defines the native component interface for Codegen.
-  - Component name: `RTNVideoPlayer`
-  - Props: `sourceUrl` and optional `paused`
-  - Codegen library name: `RTNVideoPlayerSpec`
-- `src/components/VideoPlayer.tsx` wraps the native component behind a simple React API.
-  - Preserves `sourceUrl`, `paused`, and `style` props for later tutorial steps.
-  - Applies default 16:9 player styling.
-- `package.json` includes `codegenConfig` for the component package.
-  - `type`: `components`
-  - `jsSrcsDir`: `src/specs`
-  - Android package: `com.reactnativenativeintegration.videoplayer`
+- `ios/RTNVideoPlayer/RTNVideoPlayerView.h` declares the Fabric component view.
+- `ios/RTNVideoPlayer/RTNVideoPlayerView.mm` bridges the generated Codegen props into the UIKit-backed view.
+  - Registers the `RTNVideoPlayer` component descriptor.
+  - Applies `sourceUrl` and `paused` prop updates.
+  - Resets native playback state when Fabric recycles the view.
+- `ios/RTNVideoPlayer/RTNVideoPlayerViewSwift.swift` implements the native player with `AVPlayer` and `AVPlayerLayer`.
+  - Creates playback from `sourceUrl`.
+  - Plays or pauses from the `paused` prop.
+  - Keeps the video layer sized to the React Native view bounds.
+- `package.json` adds `codegenConfig.ios.componentProvider` so Codegen can provide `RTNVideoPlayerView` for the Fabric component.
+- `ios/ReactNativeNativeIntegration.xcodeproj/project.pbxproj` includes the new native iOS source files in the app target.
+
+Later tutorial branches should add Android implementation, usage, events, and commands in the documented ladder order.
 
 ## Slides
 
