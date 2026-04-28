@@ -34,6 +34,8 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
     private var player: ExoPlayer? = null
     private var currentUrl: String? = null
     private var isPaused: Boolean = false
+    // Implementation detail: Handler-based polling drives progress events while
+    // ExoPlayer is actively playing.
     private val progressHandler = Handler(Looper.getMainLooper())
     private var progressRunnable: Runnable? = null
     private var hasEnded: Boolean = false
@@ -101,6 +103,9 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
                 addListener(
                     object : Player.Listener {
                         override fun onPlaybackStateChanged(playbackState: Int) {
+                            // Implementation detail: ExoPlayer reports the
+                            // native end state; this view emits the tutorial
+                            // end event once.
                             if (playbackState == Player.STATE_ENDED) {
                                 handlePlaybackEnded()
                             }
@@ -115,6 +120,8 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
     }
 
     private fun startProgressReporting() {
+        // Implementation detail: Poll every 500 ms to keep the JS progress
+        // event updated during playback.
         stopProgressReporting()
 
         if (hasEnded) {
@@ -133,11 +140,15 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
     }
 
     private fun stopProgressReporting() {
+        // Implementation detail: Remove the pending callback so paused,
+        // released, or recycled views stop emitting progress.
         progressRunnable?.let(progressHandler::removeCallbacks)
         progressRunnable = null
     }
 
     private fun handlePlaybackEnded() {
+        // Implementation detail: Report completion once, including one final
+        // progress event before onVideoEnd.
         if (hasEnded) {
             return
         }
@@ -150,6 +161,10 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
     }
 
     private fun emitProgressEvent() {
+        // Fabric related: Dispatch a direct event through React Native's event
+        // dispatcher using the generated surface and view ids.
+        // Implementation detail: Convert ExoPlayer milliseconds to the seconds
+        // payload expected by JS.
         val player = player ?: return
         val duration = player.duration.takeIf { it > 0 } ?: return
         val currentTime = player.currentPosition.coerceIn(0, duration)
@@ -169,6 +184,8 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
     }
 
     private fun emitVideoEndEvent() {
+        // Fabric related: Dispatch the direct onVideoEnd event for this native
+        // view instance.
         val reactContext = context as? ReactContext ?: return
         val eventDispatcher = UIManagerHelper.getEventDispatcher(reactContext)
 
@@ -194,6 +211,8 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
         private val duration: Double,
         private val progress: Double,
     ) : Event<VideoProgressEvent>(surfaceId, viewId) {
+        // Fabric related: This native event name must match the exported direct
+        // event name registered by the manager.
         override fun getEventName(): String = "topVideoProgress"
 
         override fun getEventData() =
@@ -208,6 +227,8 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
         surfaceId: Int,
         viewId: Int,
     ) : Event<VideoEndEvent>(surfaceId, viewId) {
+        // Fabric related: This native event name must match the exported direct
+        // event name registered by the manager.
         override fun getEventName(): String = "topVideoEnd"
 
         override fun getEventData() = Arguments.createMap()

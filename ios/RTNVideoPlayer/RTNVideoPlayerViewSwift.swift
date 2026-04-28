@@ -10,10 +10,14 @@ class RTNVideoPlayerViewSwift: UIView {
   // the video frames inside this UIView's Core Animation layer tree.
   private var player: AVPlayer?
   private var playerLayer: AVPlayerLayer?
+  // Implementation detail: These observers drive progress and end events for
+  // the demo player implementation.
   private var progressObserver: Any?
   private var endObserver: NSObjectProtocol?
   private var hasEnded = false
 
+  // Fabric related: Objective-C++ assigns these closures and forwards them to
+  // the generated Fabric event emitter.
   @objc var onVideoProgress: (([String: Any]) -> Void)?
   @objc var onVideoEnd: (([String: Any]) -> Void)?
 
@@ -91,6 +95,8 @@ class RTNVideoPlayerViewSwift: UIView {
       object: nextPlayer.currentItem,
       queue: .main
     ) { [weak self] _ in
+      // Implementation detail: AVFoundation reports the native player ending;
+      // the Swift view converts that into the tutorial event payload.
       self?.handlePlaybackEnded()
     }
 
@@ -132,6 +138,8 @@ class RTNVideoPlayerViewSwift: UIView {
   }
 
   private func startProgressReporting() {
+    // Implementation detail: A periodic AVPlayer observer produces the
+    // onVideoProgress event data while playback is active.
     guard progressObserver == nil, let player else {
       return
     }
@@ -144,6 +152,8 @@ class RTNVideoPlayerViewSwift: UIView {
   }
 
   private func stopProgressReporting() {
+    // Implementation detail: Removing the observer prevents duplicate progress
+    // callbacks after pause, cleanup, or view reuse.
     guard let progressObserver, let player else {
       self.progressObserver = nil
       return
@@ -154,6 +164,8 @@ class RTNVideoPlayerViewSwift: UIView {
   }
 
   private func handlePlaybackEnded() {
+    // Implementation detail: Send one final progress event, then the end event,
+    // and guard so completion is reported only once per source.
     guard !hasEnded else {
       return
     }
@@ -166,6 +178,8 @@ class RTNVideoPlayerViewSwift: UIView {
   }
 
   private func sendProgressEvent() {
+    // Implementation detail: Convert AVPlayer time values into the JS event
+    // payload shape from the native component spec.
     guard let player, let currentItem = player.currentItem else {
       return
     }

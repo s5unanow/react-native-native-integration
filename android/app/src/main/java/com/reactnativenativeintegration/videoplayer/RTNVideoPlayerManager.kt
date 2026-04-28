@@ -50,6 +50,8 @@ class RTNVideoPlayerManager :
         super.onDropViewInstance(view)
     }
 
+    // Fabric related: These event names connect Android direct events to the JS
+    // prop registration names from the native component spec.
     override fun getExportedCustomDirectEventTypeConstants(): Map<String, Any> {
         return mapOf(
             "topVideoProgress" to mapOf("registrationName" to "onVideoProgress"),

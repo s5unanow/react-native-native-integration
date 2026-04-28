@@ -5,6 +5,8 @@
 // to connect the JS component name and typed props to the native Fabric
 // component view.
 #import <react/renderer/components/RTNVideoPlayerSpec/ComponentDescriptors.h>
+// Fabric related: EventEmitters.h contains the typed C++ event emitter API
+// generated from the JS native component spec.
 #import <react/renderer/components/RTNVideoPlayerSpec/EventEmitters.h>
 #import <react/renderer/components/RTNVideoPlayerSpec/Props.h>
 #import <react/renderer/components/RTNVideoPlayerSpec/RCTComponentViewHelpers.h>
@@ -58,6 +60,8 @@ using namespace facebook::react;
     _playerView = [[RTNVideoPlayerViewSwift alloc] initWithFrame:CGRectZero];
     __weak RTNVideoPlayerView *weakSelf = self;
 
+    // Fabric related: Bridge the Swift progress callback into the generated
+    // Fabric event emitter so JS receives onVideoProgress.
     _playerView.onVideoProgress = ^(NSDictionary *event) {
       RTNVideoPlayerView *strongSelf = weakSelf;
       if (!strongSelf || !strongSelf->_eventEmitter) {
@@ -72,6 +76,8 @@ using namespace facebook::react;
       });
     };
 
+    // Fabric related: Bridge the Swift end callback into the generated Fabric
+    // event emitter so JS receives onVideoEnd.
     _playerView.onVideoEnd = ^(__unused NSDictionary *event) {
       RTNVideoPlayerView *strongSelf = weakSelf;
       if (!strongSelf || !strongSelf->_eventEmitter) {
