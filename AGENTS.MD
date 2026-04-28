@@ -33,6 +33,12 @@ When making repo-wide guidance changes, prefer stable instructions that can surv
 - If a note only applies to one lecture step, keep it in that branch or step-specific documentation rather than in repo-wide guidance.
 - If implementation details need revalidation after a React Native or native tooling change, describe them as validation targets rather than permanent truth.
 
+Native Comment Hygiene
+When changing native iOS or Android platform implementation, keep nearby teaching comments in sync:
+- Use only the two native code labels `Fabric related:` and `Implementation detail:` when adding new explanatory comments.
+- Update comments when changing native behavior so they describe the current code, not the old lecture flow.
+- Delete or move comments together with the native code they describe.
+
 Propagation Strategy
 When the same doc change needs to land across multiple tutorial branches, use a low-noise approach:
 1. Isolate the change into a doc-only commit with no unrelated code or generated-file churn.
