@@ -71,6 +71,8 @@ class RTNVideoPlayerViewSwift: UIView {
   }
 
   @objc func play() {
+    // Implementation detail: The command API updates the same paused state used
+    // by the React prop, then starts native playback.
     paused = false
 
     guard !hasEnded else {
@@ -82,12 +84,16 @@ class RTNVideoPlayerViewSwift: UIView {
   }
 
   @objc func pause() {
+    // Implementation detail: Pause command mirrors the paused prop behavior and
+    // stops progress callbacks.
     paused = true
     player?.pause()
     stopProgressReporting()
   }
 
   @objc func seekTo(_ time: Double) {
+    // Implementation detail: Clamp invalid or out-of-range command input before
+    // seeking the current AVPlayer item.
     guard let player else {
       return
     }
@@ -105,6 +111,8 @@ class RTNVideoPlayerViewSwift: UIView {
     player.seek(to: CMTime(seconds: boundedTime, preferredTimescale: 1000)) {
       [weak self] _ in
       DispatchQueue.main.async {
+        // Implementation detail: Ignore late seek completions from an older
+        // player after source changes or cleanup.
         guard let self else {
           return
         }

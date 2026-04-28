@@ -126,21 +126,29 @@ using namespace facebook::react;
 
 - (void)play
 {
+  // Fabric related: Generated command dispatch calls this native method for
+  // Commands.play from JS.
   [_playerView play];
 }
 
 - (void)pause
 {
+  // Fabric related: Generated command dispatch calls this native method for
+  // Commands.pause from JS.
   [_playerView pause];
 }
 
 - (void)seekTo:(double)time
 {
+  // Fabric related: Generated command dispatch passes the JS time argument to
+  // the Swift player implementation.
   [_playerView seekTo:time];
 }
 
 - (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args
 {
+  // Fabric related: This helper is generated from supportedCommands in the JS
+  // native component spec.
   RCTRTNVideoPlayerHandleCommand(self, commandName, args);
 }
 

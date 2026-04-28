@@ -78,6 +78,8 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
     }
 
     fun playPlayback() {
+        // Implementation detail: Command playback uses the same isPaused state
+        // as the React prop before starting ExoPlayer.
         isPaused = false
 
         if (hasEnded) {
@@ -89,12 +91,16 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
     }
 
     fun pausePlayback() {
+        // Implementation detail: Pause command mirrors the paused prop behavior
+        // and stops progress callbacks.
         isPaused = true
         player?.playWhenReady = false
         stopProgressReporting()
     }
 
     fun seekTo(time: Double) {
+        // Implementation detail: Convert command seconds to ExoPlayer
+        // milliseconds, clamp to duration, and keep progress/end state aligned.
         val player = player ?: return
         val duration = player.duration.takeIf { it > 0 }
         val targetPosition = (time.takeIf { it.isFinite() } ?: 0.0)

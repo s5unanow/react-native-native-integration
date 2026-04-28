@@ -42,14 +42,18 @@ class RTNVideoPlayerManager :
         view.setPaused(paused)
     }
 
+    // Fabric related: Codegen routes Commands.play to this manager method.
     override fun play(view: RTNVideoPlayerView) {
         view.playPlayback()
     }
 
+    // Fabric related: Codegen routes Commands.pause to this manager method.
     override fun pause(view: RTNVideoPlayerView) {
         view.pausePlayback()
     }
 
+    // Fabric related: Codegen routes Commands.seekTo and its time argument to
+    // this manager method.
     override fun seekTo(view: RTNVideoPlayerView, time: Double) {
         view.seekTo(time)
     }
