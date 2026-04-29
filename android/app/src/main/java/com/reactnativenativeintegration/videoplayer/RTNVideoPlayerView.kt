@@ -18,6 +18,7 @@ class RTNVideoPlayerView(context: Context) : FrameLayout(context) {
     // the React Native-managed view bounds.
     private val playerView =
         PlayerView(context).apply {
+            useController = false
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         }
 
