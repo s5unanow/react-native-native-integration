@@ -7,7 +7,7 @@ import {StatusBar, StyleSheet, Text, View} from 'react-native';
 import {VideoPlayer} from './src/components/VideoPlayer';
 
 const SAMPLE_VIDEO_URL =
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+  'https://media.w3.org/2010/05/sintel/trailer.mp4';
 
 function App() {
   return (
