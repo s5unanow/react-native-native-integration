@@ -1,13 +1,14 @@
 # Fabric Video Player Demo
 
-A step-by-step tutorial repo for building a Fabric Native Component in React Native.
+A step-by-step tutorial repo for building a Fabric Native Component in React Native `0.85.1`.
 
-This branch is the clean React Native `0.85.1` scaffold baseline. It intentionally does not include the custom video player component yet.
+`main` is the landing branch for the repository. It explains the tutorial ladder and keeps a clean React Native `0.85.1` scaffold in the tree, but the canonical lesson states live on the `step-*` branches.
 
 ## Branches
 
 | Branch | Description |
 |--------|-------------|
+| `main` | Landing branch and RN 0.85.1 scaffold reference |
 | `step-0-scaffold` | Clean RN 0.85.1 scaffold baseline |
 | `step-1-js-spec` | JS spec and React wrapper |
 | `step-2-ios` | iOS Fabric implementation |
@@ -16,7 +17,11 @@ This branch is the clean React Native `0.85.1` scaffold baseline. It intentional
 | `step-5-events` | Progress and completion events |
 | `step-6-commands` | Native commands |
 
+Use the direct `step-*` ladder when following or updating the tutorial. `step-6-commands` is the completed tutorial implementation.
+
 ## Running
+
+On `main` and `step-0-scaffold`, the app is just the scaffold baseline:
 
 ```bash
 npm install
@@ -25,17 +30,20 @@ npm run ios
 npm run android
 ```
 
-## This Step
+Later step branches add the native video player, events, and commands on top of that baseline.
 
-Start from a fresh React Native `0.85.1` app that later branches can build on one layer at a time.
+## Main Branch
 
-### What was added
+`main` should stay small and stable:
 
-- A stock React Native app named `ReactNativeNativeIntegration`.
-- The default Android package `com.reactnativenativeintegration`.
-- New Architecture and Hermes enabled by the template defaults.
-- Jest configured with `@react-native/jest-preset`.
-- No custom native video component, Codegen spec, Fabric registration, or Android package registration yet.
+- Point readers to the canonical tutorial branches.
+- Keep repo-wide docs aligned with the validated RN `0.85.1` ladder.
+- Avoid stale implementation snippets or one-off work plans.
+- Do not mirror `step-6-commands` unless the repo policy changes deliberately.
+
+## Scaffold Baseline
+
+The code on `main` is a stock React Native `0.85.1` app named `ReactNativeNativeIntegration`, using the default Android package `com.reactnativenativeintegration`. New Architecture and Hermes are enabled by the template defaults, and Jest uses `@react-native/jest-preset`.
 
 ## Slides
 

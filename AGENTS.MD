@@ -23,6 +23,8 @@ The canonical tutorial branches are:
 Rules:
 - Use the direct `step-*` ladder for new tutorial work.
 - Keep canonical branch names unprefixed.
+- Treat `main` as the landing/index branch, not the completed tutorial implementation.
+- Keep the completed tutorial state on `step-6-commands` unless the `main` policy is changed deliberately.
 - Treat archived older branch tips as recovery points, not workflow inputs.
 - Do not change `main` merge policy casually. That decision belongs in separate validation work.
 
