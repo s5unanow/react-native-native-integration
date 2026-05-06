@@ -6,6 +6,9 @@
     "name": "RTNVideoPlayerSpec",
     "type": "components",
     "jsSrcsDir": "src/specs",
+    "android": {
+      "javaPackageName": "com.reactnativenativeintegration.videoplayer"
+    },
     "ios": {
       "componentProvider": {
         "RTNVideoPlayer": "RTNVideoPlayerView"
